@@ -51,8 +51,63 @@
     wordEn: $('#wordEn'), wordRo: $('#wordRo'), phrase: $('#phrase'),
     sayEn: $('#sayEn'), sayRo: $('#sayRo'), cardWord: $('#cardWord'), cardQuiz: $('#cardQuiz'),
     quizText: $('#quizText'), quizHint: $('#quizHint'), stars: $('#stars'), learned: $('#learned'),
-    noVoice: $('#noVoice'),
+    noVoice: $('#noVoice'), zoomBtn: $('#zoomBtn'),
   };
+
+  /* ---------- Zoom & generous face taps ----------
+   * Face parts are tiny for a child's finger, so:
+   *  - the doll zooms in on the face for face questions (and via the 🔍 button);
+   *  - a tap anywhere on the face counts as the NEAREST face part (eye, nose, mouth…).
+   */
+  const VIEW_FULL = [0, 0, 300, 560];
+  const VIEW_FACE = [80, 46, 140, 134];
+  const FACE_SPOTS = [
+    ['eye', 131, 120], ['eye', 169, 120], ['nose', 150, 132], ['mouth', 150, 149],
+    ['cheek', 118, 141], ['cheek', 182, 141], ['ear', 100, 120], ['ear', 200, 120],
+  ];
+  const FACE_WORDS = new Set(['face', ...FACE_SPOTS.map(([w]) => w)]);
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  let view = VIEW_FULL.slice();
+  let zoomFrame = 0;
+
+  function zoom(toFace) {
+    const target = toFace ? VIEW_FACE : VIEW_FULL;
+    const from = view.slice();
+    const start = performance.now();
+    const duration = reduceMotion ? 0 : 450;
+    cancelAnimationFrame(zoomFrame);
+    const step = (now) => {
+      const k = duration ? Math.min(1, (now - start) / duration) : 1;
+      const ease = k < 0.5 ? 2 * k * k : 1 - ((-2 * k + 2) ** 2) / 2;
+      view = from.map((v, i) => v + (target[i] - v) * ease);
+      el.doll.setAttribute('viewBox', view.map((v) => v.toFixed(2)).join(' '));
+      if (k < 1) zoomFrame = requestAnimationFrame(step);
+    };
+    zoomFrame = requestAnimationFrame(step);
+    el.zoomBtn.classList.toggle('on', toFace);
+    el.zoomBtn.setAttribute('aria-pressed', toFace);
+    el.zoomBtn.setAttribute('aria-label', toFace ? 'Show the whole doll' : 'Zoom in on the face');
+    state.zoomed = toFace;
+  }
+
+  // Which face part did the finger mean? (positions are in doll coordinates)
+  function nearestFacePart(e) {
+    const m = el.doll.getScreenCTM();
+    if (!m) return 'face';
+    const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+    // Be kind during "Touch the …!" questions: the whole face counts for "face", and the asked
+    // part wins ties (a tap between nose and mouth counts for whichever was asked).
+    // A tap right on another part is still that other part.
+    const asked = state.mode === 'find' && state.quiz?.target.type === 'body' ? state.quiz.target.id : null;
+    if (asked === 'face') return 'face';
+    let best = 'face';
+    let bestDist = 18; // farther than this from every part = just "face"
+    for (const [word, x, y] of FACE_SPOTS) {
+      const d = Math.hypot(p.x - x, p.y - y) / (word === asked ? 1.4 : 1);
+      if (d < bestDist) { best = word; bestDist = d; }
+    }
+    return best;
+  }
 
   /* ---------- Speech ---------- */
   const voices = { en: null, ro: null };
@@ -409,6 +464,7 @@
     el.quizText.innerHTML = target.type === 'item'
       ? '🎧 Listen and <b>find it</b> in the closet!'
       : '🎧 Listen and <b>touch it</b> on the doll!';
+    zoom(target.type === 'body' && FACE_WORDS.has(target.id));
     hideHint();
     askFind();
   }
@@ -591,6 +647,7 @@
     el.cardQuiz.hidden = mode === 'dress';
     state.quiz = null;
     state.cmd = null;
+    if (state.zoomed) zoom(false);
     if (mode === 'find') nextQuestion();
     else if (mode === 'do') nextCommand();
     else {
@@ -720,8 +777,9 @@
     const target = e.target.closest('[data-item], [data-word]');
     if (!target) return;
     if (target.dataset.item) onDollItemTap(target.dataset.item);
-    else onBodyPart(target.dataset.word);
+    else onBodyPart(FACE_WORDS.has(target.dataset.word) ? nearestFacePart(e) : target.dataset.word);
   });
+  el.zoomBtn.addEventListener('click', () => zoom(!state.zoomed));
   document.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
   el.sayEn.addEventListener('click', () => speak(state.card.en));
   el.wordEn.addEventListener('click', () => speak(state.card.en));
