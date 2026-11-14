@@ -14,7 +14,7 @@ iPad voices: Settings → Accessibility → Spoken Content → Voices → downlo
 
 ## Develop
 
-Open `index.html` directly in Chrome or Safari (no build step). To test on a device on your Wi-Fi: `./serve.sh`.
+Open `index.html` directly in Chrome or Safari (no build step). Offline mode only runs over https (the live site) or localhost.
 
 To publish a change: commit and push to `main`. If you add or remove files, also update the `FILES`
 list in `sw.js` and bump its `VERSION`.
