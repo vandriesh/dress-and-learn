@@ -37,9 +37,14 @@ list in `sw.js` and bump its `VERSION`.
   Romanian uses the right verb per item: îmbracă-i (clothes), încalță-i (shoes), pune-i (accessories).
 - **Say it 3 times** (`js/practice.js`): looking at the Romanian hint in Level 1 or 2 locks the game until the kid
   says the English out loud 3 times (the word, or the action phrase like "take off the boots").
-  Uses the browser's speech recognition (on iPad: Apple dictation). It checks the words were *understood*,
-  not accent: "clown" won't pass for "crown", "shirt" won't pass for "skirt". If the mic is blocked or
+  Uses the browser's speech recognition (on iPad: Apple dictation). If the mic is blocked or
   recognition is unavailable, it falls back to an "✋ I said it!" button. Grown-ups can hold "skip" for 2 s.
+- **Gauge (0–100)**: how clearly the words were understood, not accent. Built from which words were recognized
+  (the item word and the action count double, a one-letter near miss counts half), whether it was the
+  recognizer's first guess, and its confidence. Each word turns green / amber / grey after a try.
+- **Strictness slider** (⚙️ in the header, for grown-ups) sets the pass mark shown on the gauge:
+  Easy 30 (main word is enough, near misses count), Medium 65 (default: main word and action, said right),
+  Hard 85 (every word, recognizer's first guess). E.g. "clown" for "crown" passes only Easy.
 - Progress (outfit, stars, words heard and said) is saved in the browser.
 - The 🔊 Romanian button shows only if the device has a Romanian voice (macOS/iOS: "Ioana").
 

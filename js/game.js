@@ -151,14 +151,14 @@
   function verbPhrase(item, on) {
     if (item.slot === 'bag') {
       return on
-        ? { verb: 'give', en: 'Give her the bag!', ro: 'Dă-i geanta!', doneEn: 'You gave her the bag!', doneRo: 'I-ai dat geanta!' }
-        : { verb: 'take away', en: 'Take away the bag!', ro: 'Ia-i geanta!', doneEn: 'You took away the bag!', doneRo: 'I-ai luat geanta!' };
+        ? { verb: 'give', key: 'bag', en: 'Give her the bag!', ro: 'Dă-i geanta!', doneEn: 'You gave her the bag!', doneRo: 'I-ai dat geanta!' }
+        : { verb: 'take away', key: 'bag', en: 'Take away the bag!', ro: 'Ia-i geanta!', doneEn: 'You took away the bag!', doneRo: 'I-ai luat geanta!' };
     }
     if (on) {
       const [cmd, past] = RO_PUT_ON[item.cat];
-      return { verb: 'put on', en: `Put on the ${item.en}!`, ro: `${cmd} ${item.roDef}!`, doneEn: `You put on the ${item.en}!`, doneRo: `${past} ${item.roDef}!` };
+      return { verb: 'put on', key: item.en, en: `Put on the ${item.en}!`, ro: `${cmd} ${item.roDef}!`, doneEn: `You put on the ${item.en}!`, doneRo: `${past} ${item.roDef}!` };
     }
-    return { verb: 'take off', en: `Take off the ${item.en}!`, ro: `Dă-i jos ${item.roDef}!`, doneEn: `You took off the ${item.en}!`, doneRo: `I-ai dat jos ${item.roDef}!` };
+    return { verb: 'take off', key: item.en, en: `Take off the ${item.en}!`, ro: `Dă-i jos ${item.roDef}!`, doneEn: `You took off the ${item.en}!`, doneRo: `I-ai dat jos ${item.roDef}!` };
   }
 
   // Bold the verb at the start of a sentence: "<b>Put on</b> the hat!"
@@ -471,7 +471,7 @@
       const plural = !isHair && item.plural;
       const adj = roAdj(item, color);
       return {
-        verb: 'make', select: item.id,
+        verb: 'make', key: color.en, select: item.id,
         en: `Make the ${noun} ${color.en}!`, ro: `Fă ${item.roDef} ${adj}!`,
         doneEn: `Now the ${noun} ${plural ? 'are' : 'is'} ${color.en}!`, doneRo: `Acum ${item.roDef} ${plural ? 'sunt' : 'e'} ${adj}!`,
         remaining: () => (isWorn(item.id) && colorOf(item).toLowerCase() === color.hex.toLowerCase() ? 0 : 1),
@@ -484,16 +484,16 @@
       const txt = slot === 'shoes'
         ? { en: 'Change her shoes!', ro: 'Schimbă-i pantofii!', doneEn: 'You changed her shoes!', doneRo: 'I-ai schimbat pantofii!' }
         : { en: 'Change her hair!', ro: 'Schimbă-i coafura!', doneEn: 'You changed her hair!', doneRo: 'I-ai schimbat coafura!' };
-      return { verb: 'change', ...txt, remaining: () => (state.outfit[slot] && state.outfit[slot] !== start ? 0 : 1) };
+      return { verb: 'change', key: slot, ...txt, remaining: () => (state.outfit[slot] && state.outfit[slot] !== start ? 0 : 1) };
     }]);
 
     if (clothesOn() >= 2) options.push([0.8, () => ({
-      verb: 'undress', en: 'Undress the doll!', ro: 'Dezbracă păpușa!',
+      verb: 'undress', key: 'undress', en: 'Undress the doll!', ro: 'Dezbracă păpușa!',
       doneEn: 'You undressed the doll!', doneRo: 'Ai dezbrăcat păpușa!', remaining: clothesOn,
     })]);
 
     if (dressedRemaining() > 0) options.push([1.5, () => ({
-      verb: 'dress', en: 'Dress the doll!', ro: 'Îmbracă păpușa!',
+      verb: 'dress', key: 'dress', en: 'Dress the doll!', ro: 'Îmbracă păpușa!',
       doneEn: 'You dressed the doll!', doneRo: 'Ai îmbrăcat păpușa!', remaining: dressedRemaining,
     })]);
 
@@ -558,12 +558,12 @@
     if (state.mode === 'do' && state.cmd) {
       task = state.cmd;
       el.quizHint.innerHTML = `🇷🇴 ${task.ro}`;
-      say = { en: lowerFirst(task.en.replace('!', '')), ro: task.ro };
+      say = { en: lowerFirst(task.en.replace('!', '')), ro: task.ro, key: task.key, focus: task.verb };
     } else if (state.quiz) {
       task = state.quiz;
       const w = wordOf(task.target);
       el.quizHint.innerHTML = `🇷🇴 <b>${w.ro}</b>${task.tries >= 3 ? ` &nbsp;·&nbsp; 🇬🇧 ${w.en}` : ''}`;
-      say = { en: w.en, ro: w.ro };
+      say = { en: w.en, ro: w.ro, key: w.en };
     }
     el.quizHint.hidden = false;
     if (!task || task.done || task.practiced || Practice.isOpen) return;

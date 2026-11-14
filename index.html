@@ -26,6 +26,7 @@
     <div class="stats">
       <span class="chip" title="Stars from Listen & find">⭐ <b id="stars">0</b></span>
       <span class="chip" title="Different words you heard">📚 <b id="learned">0</b> words</span>
+      <button class="chip" id="settingsBtn" title="For grown-ups" aria-label="Settings for grown-ups">⚙️</button>
     </div>
   </header>
 
@@ -96,10 +97,28 @@
         <span class="practice-en" id="practiceEn"></span>
         <button class="speak small" id="practiceListen" aria-label="Listen">🔊</button>
       </div>
+      <div class="gauge" id="practiceGauge"></div>
       <div class="practice-dots" id="practiceDots" aria-label="Progress"></div>
       <button class="mic" id="practiceMic" aria-label="Tap and speak">🎤</button>
       <p class="practice-status" id="practiceStatus"></p>
       <button class="practice-skip" id="practiceSkip">Grown-up: hold to skip</button>
+    </div>
+  </div>
+
+  <!-- Grown-up settings -->
+  <div id="settings" class="practice" hidden role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="practice-card settings-card">
+      <p class="practice-title" id="settingsTitle">⚙️ For grown-ups</p>
+      <label class="setting-label" for="strictness">How strict is <b>“Say it 3 times”</b>?</label>
+      <input type="range" id="strictness" class="slider" min="0" max="2" step="1" value="1">
+      <div class="slider-ticks">
+        <button data-level="0">😊 Easy</button>
+        <button data-level="1">🙂 Medium</button>
+        <button data-level="2">😎 Hard</button>
+      </div>
+      <p class="setting-about" id="strictnessAbout"></p>
+      <p class="setting-note">The score measures how clearly the iPad understood the words, not accent.</p>
+      <button class="pill" id="settingsClose">Done</button>
     </div>
   </div>
 

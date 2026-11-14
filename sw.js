@@ -4,7 +4,7 @@
  * updates on the next launch after being online.
  * Bump VERSION when files are added or removed.
  */
-const VERSION = 'dress-learn-v2';
+const VERSION = 'dress-learn-v3';
 const FILES = [
   './',
   'index.html',
