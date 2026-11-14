@@ -26,8 +26,8 @@ list in `sw.js` and bump its `VERSION`.
 - **Colors teach phrases**: "a red dress = o rochie roșie", "blue jeans = blugi albaștri"
   (Romanian gender/plural agreement is built into the data).
 - **Tap the doll** for body parts: eye, nose, mouth, ear, hand, leg… Face parts are tiny for a child's finger, so
-  the doll zooms in on the face for face questions (or with the 🔍 button), and a tap counts as the nearest face
-  part, with the asked part winning close calls.
+  the first tap on the head zooms in (no right/wrong yet; the 🔍 button also toggles it), and then a tap counts as
+  the nearest face part, with the asked part winning close calls. Every question starts zoomed out.
 - **Drag & drop**: drag clothes onto the doll to put them on, drag them off to take them off.
   While dragging, a label shows the verb ("put on", "take off"). Touch: press and hold briefly, then drag.
   Phones keep the doll pinned on top so it's always a drop target.

@@ -464,7 +464,7 @@
     el.quizText.innerHTML = target.type === 'item'
       ? '🎧 Listen and <b>find it</b> in the closet!'
       : '🎧 Listen and <b>touch it</b> on the doll!';
-    zoom(target.type === 'body' && FACE_WORDS.has(target.id));
+    if (state.zoomed) zoom(false); // every question starts with the whole doll; tapping the head zooms in
     hideHint();
     askFind();
   }
@@ -776,8 +776,16 @@
   el.doll.addEventListener('click', (e) => {
     const target = e.target.closest('[data-item], [data-word]');
     if (!target) return;
-    if (target.dataset.item) onDollItemTap(target.dataset.item);
-    else onBodyPart(FACE_WORDS.has(target.dataset.word) ? nearestFacePart(e) : target.dataset.word);
+    if (target.dataset.item) return onDollItemTap(target.dataset.item);
+    const word = target.dataset.word;
+    if (!FACE_WORDS.has(word)) return onBodyPart(word);
+    if (state.zoomed) return onBodyPart(nearestFacePart(e));
+    // Zoomed out, first tap on the head = "let me look closer": zoom in, no right/wrong yet.
+    const q = state.mode === 'find' && state.quiz && !state.quiz.done ? state.quiz : null;
+    if (q && q.target.type === 'body' && q.target.id === 'face') return onBodyPart('face');
+    zoom(true);
+    if (q) setTimeout(askFind, 300);      // repeat the question once the face is big
+    else if (state.mode === 'dress') onBodyPart('face');
   });
   el.zoomBtn.addEventListener('click', () => zoom(!state.zoomed));
   document.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
