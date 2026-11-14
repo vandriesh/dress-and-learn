@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff4ec">
+  <title>Dress &amp; Learn</title>
+  <link rel="icon" href="icons/icon-192.png">
+  <!-- iPad / iPhone: "Add to Home Screen" opens it full-screen like an app -->
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Dress &amp; Learn">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="preload" href="fonts/fredoka-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>Dress &amp; Learn</h1>
+      <p>Îmbracă păpușa · învață engleza</p>
+    </div>
+    <div class="stats">
+      <span class="chip" title="Stars from Listen & find">⭐ <b id="stars">0</b></span>
+      <span class="chip" title="Different words you heard">📚 <b id="learned">0</b> words</span>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="left">
+      <div class="stage" id="stage">
+        <svg id="doll" viewBox="0 0 300 560" role="img" aria-label="Doll"></svg>
+      </div>
+
+      <div class="card">
+        <div id="cardWord" class="card-word">
+          <button class="speak" id="sayEn" aria-label="Say it again">🔊</button>
+          <div class="words">
+            <div class="en" id="wordEn">Hello!</div>
+            <div class="ro">
+              <span aria-hidden="true">🇷🇴</span>
+              <span id="wordRo">Salut!</span>
+              <button class="speak small" id="sayRo" aria-label="Spune în română" hidden>🔊</button>
+            </div>
+            <div class="phrase" id="phrase"><span class="muted">Tap or drag clothes onto the doll!</span></div>
+          </div>
+        </div>
+
+        <div id="cardQuiz" class="card-quiz" hidden>
+          <p id="quizText" class="quiz-text"></p>
+          <div class="quiz-actions">
+            <button id="quizAgain" class="pill">🔊 Again</button>
+            <button id="quizHintBtn" class="pill">💡 Hint</button>
+            <button id="quizSkip" class="pill ghost">⏭ Skip</button>
+          </div>
+          <p id="quizHint" class="quiz-hint" hidden></p>
+        </div>
+        <p id="noVoice" class="no-voice" hidden>This browser can't speak. Try Chrome or Safari.</p>
+      </div>
+    </section>
+
+    <section class="right">
+      <div class="modes">
+        <button data-mode="dress" class="on" aria-pressed="true"><small>Play</small><span>👗 Dress up</span></button>
+        <button data-mode="find" aria-pressed="false"><small>Level 1</small><span>🎧 Find it</span></button>
+        <button data-mode="do" aria-pressed="false"><small>Level 2</small><span>🎬 Do it</span></button>
+      </div>
+
+      <nav class="tabs" id="tabs" aria-label="Wardrobe"></nav>
+      <div class="grid" id="grid"></div>
+
+      <div class="palette-wrap">
+        <h3 id="paletteTitle">Colors</h3>
+        <div class="palette" id="palette"></div>
+      </div>
+
+      <div class="extras">
+        <div class="skins" id="skins" aria-label="Skin tone"></div>
+        <div class="extra-buttons">
+          <button id="random" class="pill">🎲 Surprise me</button>
+          <button id="reset" class="pill ghost">↺ Start over</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/items.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
