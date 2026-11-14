@@ -551,14 +551,32 @@
 
   function hideHint() { el.quizHint.hidden = true; el.quizHint.textContent = ''; }
 
+  // Looking at the Romanian has a price: say the English 3 times out loud (see practice.js).
   function showHint() {
+    let task = null;   // the question or command being hinted
+    let say = null;    // what she has to say: { en, ro }
     if (state.mode === 'do' && state.cmd) {
-      el.quizHint.innerHTML = `🇷🇴 ${state.cmd.ro}`;
+      task = state.cmd;
+      el.quizHint.innerHTML = `🇷🇴 ${task.ro}`;
+      say = { en: lowerFirst(task.en.replace('!', '')), ro: task.ro };
     } else if (state.quiz) {
-      const w = wordOf(state.quiz.target);
-      el.quizHint.innerHTML = `🇷🇴 <b>${w.ro}</b>${state.quiz.tries >= 3 ? ` &nbsp;·&nbsp; 🇬🇧 ${w.en}` : ''}`;
+      task = state.quiz;
+      const w = wordOf(task.target);
+      el.quizHint.innerHTML = `🇷🇴 <b>${w.ro}</b>${task.tries >= 3 ? ` &nbsp;·&nbsp; 🇬🇧 ${w.en}` : ''}`;
+      say = { en: w.en, ro: w.ro };
     }
     el.quizHint.hidden = false;
+    if (!task || task.done || task.practiced || Practice.isOpen) return;
+    task.practiced = true;
+    Practice.open(say, {
+      speak,
+      onDone: () => {
+        learn('said:' + say.en);
+        // Back to the game: repeat the question so she knows what to do next.
+        if (state.mode === 'do' && state.cmd === task) speak(task.en);
+        else if (state.mode === 'find' && state.quiz === task) askFind();
+      },
+    });
   }
 
   function setMode(mode) {

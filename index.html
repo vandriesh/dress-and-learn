@@ -87,7 +87,24 @@
     </section>
   </main>
 
+  <!-- "Say it 3 times!" — appears after a hint, unlocks the game when done -->
+  <div id="practice" class="practice" hidden role="dialog" aria-modal="true" aria-labelledby="practiceTitle">
+    <div class="practice-card">
+      <p class="practice-title" id="practiceTitle">🎤 Say it 3 times!</p>
+      <p class="practice-ro" id="practiceRo"></p>
+      <div class="practice-word">
+        <span class="practice-en" id="practiceEn"></span>
+        <button class="speak small" id="practiceListen" aria-label="Listen">🔊</button>
+      </div>
+      <div class="practice-dots" id="practiceDots" aria-label="Progress"></div>
+      <button class="mic" id="practiceMic" aria-label="Tap and speak">🎤</button>
+      <p class="practice-status" id="practiceStatus"></p>
+      <button class="practice-skip" id="practiceSkip">Grown-up: hold to skip</button>
+    </div>
+  </div>
+
   <script src="js/items.js"></script>
+  <script src="js/practice.js"></script>
   <script src="js/game.js"></script>
 </body>
 </html>

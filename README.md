@@ -35,7 +35,12 @@ list in `sw.js` and bump its `VERSION`.
   "Make the dress red!", "Change her shoes!", "Undress the doll!", "Dress the doll!".
   Success is said in the past tense ("You took off the boots!" = "I-ai dat jos cizmele!").
   Romanian uses the right verb per item: îmbracă-i (clothes), încalță-i (shoes), pune-i (accessories).
-- Progress (outfit, stars, words heard) is saved in the browser.
+- **Say it 3 times** (`js/practice.js`): looking at the Romanian hint in Level 1 or 2 locks the game until the kid
+  says the English out loud 3 times (the word, or the action phrase like "take off the boots").
+  Uses the browser's speech recognition (on iPad: Apple dictation). It checks the words were *understood*,
+  not accent: "clown" won't pass for "crown", "shirt" won't pass for "skirt". If the mic is blocked or
+  recognition is unavailable, it falls back to an "✋ I said it!" button. Grown-ups can hold "skip" for 2 s.
+- Progress (outfit, stars, words heard and said) is saved in the browser.
 - The 🔊 Romanian button shows only if the device has a Romanian voice (macOS/iOS: "Ioana").
 
 ## Files

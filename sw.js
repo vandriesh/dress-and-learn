@@ -4,12 +4,13 @@
  * updates on the next launch after being online.
  * Bump VERSION when files are added or removed.
  */
-const VERSION = 'dress-learn-v1';
+const VERSION = 'dress-learn-v2';
 const FILES = [
   './',
   'index.html',
   'style.css',
   'js/items.js',
+  'js/practice.js',
   'js/game.js',
   'manifest.webmanifest',
   'fonts/fredoka-latin.woff2',
